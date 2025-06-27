@@ -36,15 +36,3 @@ WORKDIR /var/www/html
 
 CMD ["/usr/bin/supervisord", "-n"]
 
-
-
-
-RUN apt update && apt upgrade -y && \
-    apt install -y --no-install-recommends \
-    software-properties-common wget curl unzip tzdata lsb-release ca-certificates openssl && \
-    add-apt-repository ppa:ondrej/php -y && \
-    apt update && apt install -y --no-install-recommends \
-    php8.2 php8.2-cli php8.2-common php8.2-mysql \
-    php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-curl php8.2-redis \
-    supervisor && \
-    apt clean && rm -rf /var/lib/apt/lists/*
