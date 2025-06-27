@@ -1,0 +1,50 @@
+FROM ubuntu:24.04
+
+ENV TZ=Asia/Kolkata
+
+RUN apt update && apt upgrade -y && \
+    apt install -y --no-install-recommends \
+    software-properties-common wget curl unzip tzdata lsb-release ca-certificates openssl && \
+    add-apt-repository ppa:ondrej/php -y && \
+    apt update && apt install -y --no-install-recommends \
+    php8.2 php8.2-cli php8.2-common php8.2-mysql \
+    php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-curl php8.2-redis \
+    supervisor && \
+    apt clean && rm -rf /var/lib/apt/lists/*
+
+RUN echo "[program:faveo-Horizon]\
+\nprocess_name=%(program_name)s\
+\ncommand=php /var/www/html/artisan horizon\
+\nautostart=true\
+\nautorestart=true\
+\nuser=www-data\
+\nredirect_stderr=true\
+\nstdout_logfile=/var/www/html/storage/logs/horizon-worker.log\
+\n\
+\n[program:faveo-cron]\
+\nprocess_name=%(program_name)s_%(process_num)02d\
+\ncommand=bash -c 'sleep 60 && php /var/www/html/artisan schedule:run'\
+\nautostart=true\
+\nautorestart=true\
+\nnumprocs=1\
+\nuser=www-data\
+\nredirect_stderr=true\
+\nstdout_logfile=/var/www/html/storage/logs/faveo-cron.log" \
+> /etc/supervisor/conf.d/faveo-worker.conf
+
+WORKDIR /var/www/html
+
+CMD ["/usr/bin/supervisord", "-n"]
+
+
+
+
+RUN apt update && apt upgrade -y && \
+    apt install -y --no-install-recommends \
+    software-properties-common wget curl unzip tzdata lsb-release ca-certificates openssl && \
+    add-apt-repository ppa:ondrej/php -y && \
+    apt update && apt install -y --no-install-recommends \
+    php8.2 php8.2-cli php8.2-common php8.2-mysql \
+    php8.2-mbstring php8.2-xml php8.2-bcmath php8.2-curl php8.2-redis \
+    supervisor && \
+    apt clean && rm -rf /var/lib/apt/lists/*
