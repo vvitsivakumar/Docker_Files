@@ -1,0 +1,10 @@
+FROM ubuntu:24.04
+
+RUN apt update && \
+    apt upgrade -y && \
+    apt install -y unzip && \
+    rm -rf /var/lib/apt/lists/*
+
+WORKDIR /html
+
+CMD ["/bin/bash"]

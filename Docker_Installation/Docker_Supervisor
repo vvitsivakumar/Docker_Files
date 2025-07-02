@@ -35,4 +35,3 @@ RUN echo "[program:faveo-Horizon]\
 WORKDIR /var/www/html
 
 CMD ["/usr/bin/supervisord", "-n"]
-
